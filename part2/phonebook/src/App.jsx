@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {useState} from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    const [persons, setPersons] = useState([
+        { name: 'Arto Hellas', number: '040-123456', id: 1 },
+        { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+        { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+        { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
+    ])
+    const [newName, setNewName] = useState('')
+    const [newNumber, setNewNumber] = useState('')
+    const [filter, setFilter] = useState('')
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const handleClick = (event) => {
+        event.preventDefault();
+        if (persons.find(person => person.name === newName)){
+            alert(`${newName} is already added to the phonebook`);
+        }
+        else{
+            setPersons([...persons, { name: newName , number: newNumber}]);
+            setNewName('');
+        }
+
+    }
+    const handleNameChange = (event) => {
+            setNewName(event.target.value)
+    }
+    const handleNumberChange = (event) => {
+            setNewNumber(event.target.value)
+    }
+    const handleFilterChange = (event) => {
+            setFilter(event.target.value)
+    }
+
+    const Form = () =>{
+        return <div>
+
+            <form>
+                <div>
+                    name: <input value={newName} onChange={handleNameChange}/>
+                </div>
+                <div>
+                    number: <input value={newNumber} onChange={handleNumberChange}/>
+                </div>
+                <div>
+                    <button type="submit" onClick={handleClick}>add</button>
+                </div>
+            </form>
+        </div>
+    }
+    const Book = () =>{
+        return <div>
+
+            {persons.filter((f)=>(f.name.toLowerCase().includes(filter))).map((person, index) => (
+                <p key={index}>{person.name} {person.number}</p>
+            ))}
+    </div>
+    }
+    const Filter = () => {
+        return <div>
+            <p>filter shown with <input value={filter} onChange={handleFilterChange}></input></p>
+
+        </div>
+    }
+
+    return (
+        <div>
+            <h2>Phonebook</h2>
+
+            <Filter/>
+            <h3>Add a new Contact</h3>
+            <Form/>
+            <h2>Numbers</h2>
+            <Book/>
+        </div>
+    )
 }
 
 export default App
